@@ -1,0 +1,55 @@
+testplan.txt is a description of the implementation of our main function and will describe the output that you can expect to see from it and how to interpret the results.
+
+Our main function was implemented using the following ideology:
+In order to fully demonstrate the capabilities and minor functionalities of our sorted list data structure and the sorted list iterator, we developed main as a step-through program where the user will step through a pseudo-tutorial demonstrating all of the different functionalities that were programmed into our sorted list.
+
+These different processes demonstrated in the tutorial will help to show the user the intricacies of the program and describe to them how and what is happening along the way.
+To do this, main will first store an array of 20 integer pointers into a sorted list data structure. Main will perform several operations step-by-step to the user, who ony needs to click enter to examine each functionality. 
+During these examples the user will be exposed to the inner workings of the sorted list data structure. Most notably, we will describe, in full detail to them, the "stickiness" of the sorted list iterators. This sticky quality, where iterators stick to their list nodes, even if they were removed from the list, is integral to proper understanding and usage of this sorted list data structure.
+Most of main will demonstrate to the user all of the different cases and exceptions that arise when taking advantage of this sticky quality. 
+
+Below, when we say, for example "node 9", what we really mean is the node containing the value 9.
+Also, when we sat an iterator is "pointing to" a node, what we really mean is the current field of the iterator struct is pointing to that node. These are both done for convenience and simplicity.
+
+The user can expect to encounter the following data output during the tutorial with the integer pointers (The numbers in this list correspond to those found in the main tutorial):
+1.	A simple visual representation of a sorted list containing 20 integer values (actually integer pointers pointing to these values) 1 through 20. This list was achieved using the SLInsert function.
+2.	Testing of the remove functionality by removing items 1 13 and 20 (these numbers were chosen in order to test removals at the beginning, middle, and end of a list): Will remove values 1 13 and 20 from the list.
+3.	Testing the removal of an item not found in the list: Attempts to find value 21 but prints that it was unsuccessful, list remains unchanged.
+4.	Testing of the insert functionality by inserting values 1 13 and 20 (these numbers were chosen in order to test insertions at  the beginning, middle, and end of a list): Values 1 13 and 20 will once more appear in the list.
+5.	Inserting a duplicate item into the list: Attempts to insert a duplicate item but prints that it failed, list remains unchanged.
+6.	Creating 2 Sorted List Iterators: The head node of the list (value 20) will display a pointer counter of 3.
+7.	Testing iteration of one iterator through the list: Iterates the first iterator from value 20 until value 13. Prints each of these values as they are returned. Prints the resulting list with changed ptrcounters for value 20 and value 13 (both should be 2).
+8.	Remove node with data value 13: An iterator is still stickied on this node, so it will be removed from the actual sorted list, but the iterator will stay stuck on and be able to properly iterate to the following item and through the end of the list. Will output a pointer counter on node 12 of 2 to indicate that node 13 is still pointing to it as it has not been deleted (due to iterator one sticking on 13). Also displays SLGetItem of the iterator to prove its "stickiness".
+9.	Iterate this iterator to the end of the list: Iterates the same iterator through every data item in the list, printing out each value as it is returned. The iterator is then destroyed. Note how the iterator maintained proper functionality even though the node it was pointing to had been removed from the list.
+10.	Remove head node with iterator 2 still pointing to it: Output will show that node 19 has 2 pointers on it, showing that even though node 20 was removed from the list, since iterator 2 is stuck on it, it is still pointing to node 19 (this is done purposefully so the iterator can properly continue iteration after it returns and then destroys node 20).
+11.	Destroy iterator 2: All iterators should be destroyed and all pointer counters should again be 1.
+12.	Create 3 more iterators: Node 19 (head node) should display a pointer counter of 4 representing the 3 iterators pointing to it as well as the head pointer of the sorted list.
+13.	Iterate the following iterators: Iterator 1 to node 11, iterator 2 to node 10, and iterator 3 to node 9. Each iterator should output its next value as it is returned. The final list should display pointer counters of value 2 for nodes 11 10 and 9 (since each of these are being pointed to by an iterator).
+14.	Remove nodes 11 10 and 9: Remove each of these 3 nodes with iterators on them. Will display each of these iterators SLGetItem return values to show that they are still stuck on their values even though they were removed. Node 8 should have a pointer counter with value 2. Iterators should continue functioning properly in the following steps despite these removals.
+15.	Return the SLNextItem of each iterator: Should return value 10 9 and 8 for each iterator respectively. Node 8 should have a pointer counter of 3.
+16.	Return the SLNextItem of each iterator: Should return value 9 8 and 7 for each iterator respectively. Node 8 should have a pointer counter of 3 and node 7 a pointer counter of 2.
+17.	Return the SLNextItem of each iterator: Should return value 8 7 and 6 for each iterator respectively. Nodes 8 7 and 6 should each have a pointer counter of 2 (all are being pointed to by exactly one iterator).
+18.	Destroy iterators 2 and 3; Iterate iterator 1 to the last value in the list(node 1): Should print all values of SLNextItem for iterator 1 as they are returned. Node 1 should have a pointer counter of 2.
+19.	Remove the last node (node 1): List should show node 1 is removed, but SLGetItem should still return value 1 since the iterator stuck to it. SLNextItem should return NULL since that was the last item in the list (and thus the last item for iteration).
+
+This will conclude the in depth analysis using integer data items.
+Finally, the user will have a much more brief tutorial on more complex data items.
+
+Student Structures:
+A student structure is a structure with 3 fields: An int id field, a char * name field, and an int credits field.
+The student structures are printed in main by calling a function that uses sorted list iterators.
+The following data manipulations will occur:
+
+1.	Five students will be inserted into a list sorted by their ID numbers. The output will display the results of these 5 insertions.
+2.	One student will be removed from the list. The output will display the results of this removal.
+3.	Attempts to insert a duplicate student. Should display insertion failure and print an unchanged list.
+
+Book Structures:
+A book structure is a structure with 3 fields: A char * title field, a char * author field, and a char * publishdate field.
+The book structures are printed in main by calling a function that uses sorted list iterators.
+The following data manipulations will occur:
+
+1.	Five books will be inserted into a list sorted by their titles. The output will display the results of these 5 insertions.
+2	Attempts to remove a book not found in the list. The output will display the a failed removal and the list will remain unchanged.
+
+This concludes testing of the sorted list structure and its accompanying iterator. Thank you for using SortedList.

@@ -1,0 +1,216 @@
+for all tests: (">" == message from server)
+
+test 0: basic server mechanics
+
+	Open 3 shells: ./server, ./client localhost, ./client localhost
+
+	Server: Announces acceptance and connection of both clients
+
+	Client 1 & 2: Announces connection to server and displays welcome message
+
+	Client 1: 
+
+	open account0
+	>Server Message: Account successfully created
+	start account0
+	>Server Message: Session started for account: account0
+	credit 50.50
+	>Server Message: Successfully credited $50.50 to account: account0
+	debit 25.25
+	>Server Message: Successfully debited $25.25 from account: account0
+	balance
+	>Server Message: Account current balance: $25.25
+	finish
+	>Server Message: Successfully finished account: "account0" is no longer in session
+
+	Client 2:
+
+	open account1
+	>Server Message: Account successfully created
+	start account1
+	>Server Message: Session started for account: account1
+	credit 50.50
+	>Server Message: Successfully credited $50.50 to account: account1
+	debit 25.25
+	>Server Message: Successfully debited $25.25 from account: account1
+	balance
+	>Server Message: Account current balance: $25.25
+	finish
+	>Server Message: Successfully finished account: "account1" is no longer in session
+
+	Client 1:
+
+	exit
+	>Server Message: Disconnected from server.
+	Client shutting down.
+
+	Client 2:
+
+	exit
+	>Server Message: Disconnected from server.
+	Client shutting down.
+
+	Server:
+
+	Observe every 20 seconds accurate representation of data stored into the bank by both of these concurrent client sessions.
+	Press Ctrl-C to exit and observe:
+	Server successfully shutting down.
+
+test 1: errors produced by open command
+
+	Open 2 shells: ./server, ./client localhost
+
+	Client: 
+	open
+	>Server Message: No argument provided to open. Requires: <account name>.
+	open account0
+	open account0
+	>Server Message: Unable to create account: Account name "account0" already exists.
+	open 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000... (more than 100 but less than 256 characters)
+	>Server Message: Unable to create account: Account name too long. Max size: 100 characters.
+	open account1
+	open account2
+	...continue until...
+	open account20
+	>Server Message: Unable to create account: Account limit reached: 20
+
+test 2: errors produced by start command
+
+	Open 2 shells: ./server, ./client localhost
+
+	Client:
+	open account0
+	start
+	>Server Message: No argument provided to start. Requires: <account name>.
+	open account1
+	start account0
+	start account1
+	>Server Message: Unable to start new session: Another account is already in session.
+	finish
+	start account2
+	>Server Message: Unable to start account: No account with this name exists.
+
+	[Final error shown in extra credit test case]
+
+test 3: errors produced by the credit command
+
+	Open 2 shells: ./server, ./client localhost
+
+	Client:
+	open account0
+	credit 50
+	>Server Message: Unable to credit account: No account is currently in session.
+	start account0
+	credit
+	>Server Message: No argument provided to credit: Requires <amount>
+	credit aaa
+	>Server Message: Invalid data found in <amount> argument: aaa
+	
+test 4: errors produced by the debit command
+	
+	Open 2 shells: ./server, ./client localhost
+
+	Client:
+	open account0
+	debit 50
+	>Server Message: Unable to debit account: No account is currently in session. 
+	start account0
+	debit
+	>Server Message: No argument provided to debit. Requires: <amount>
+	debit aaa
+	>Server Message: Invalid data found in <amount> argument: aaa
+	credit 100
+	debit 150
+	>Server Message: Unable to debit account: Debit request would leave the account balance under $0.00.
+
+test 5: errors produced by the balance command
+
+	Open 2 shells: ./server, ./client localhost
+
+	Client:
+	balance
+	>Server Message: Unable to retrieve balance: No account currently in session.
+
+test 6: errors produced by the finish command
+
+	Open 2 shells: ./server, ./client localhost
+
+	Client:
+	finish
+	>Server Message: Unable to finish account: No account currently in session.
+
+test 7: error produced by entering an invalid command
+
+	Open 2 shells: ./server, ./client localhost
+
+	Client:
+	withdrawal
+	>Server Message: Invalid command: withdrawal
+	>Try Again.
+
+test 8: shutting down the server
+
+	Open 4 shells: ./server, ./client localhost, ./client localhost, ./client localhost
+
+	In server shell: Press: Ctrl-C
+
+	Server Prints: Server successfully shut down.
+
+	Client 1, Client 2, Client 3:
+	>Server Message: Server has shutdown.
+	Client shutting down.
+
+test 9: exiting a client
+
+	Open 4 shells: ./server, ./client localhost, ./client localhost, ./client localhost
+
+	Client 1:
+	exit
+	>Server Message: Disconnected from server.
+	Client shutting down.
+
+	Client 2:
+	open account0
+	(this proves remaining clients and server are still functional)
+	Ctrl-C
+	(Server displays client disconnected without using exit command)
+
+	Client 3:
+	open account1
+	(this proves remaining client and server are still functional)
+
+test 10: client searching for server
+
+	Open 1 shell: ./client localhost
+	
+	Client:
+	Server not found: Reattempting in 3 seconds...
+	Server not found: Reattempting in 3 seconds...
+	...
+
+	Open another shell: ./server
+
+	Client:
+	Successfully connected to server.
+
+test 11: Extra Credit 0
+
+	Open 3 shells: ./server, ./client localhost, ./client localhost
+
+	Client 1:
+	open account0
+	start account0
+
+	Client 2:
+	start account0
+	>Server Message: Unable to start account: Account already in session.
+	>Retrying in 2 seconds...
+	...this message continually repeats as server continually tries to start this session for this client
+
+	Client 1:
+	finish
+
+	Client 2:
+	>Server Message: Session started for account: account0.
+
+	Client 2 will automatically start session for account0 after Client 1 has finished it, as per extra credit instructions.

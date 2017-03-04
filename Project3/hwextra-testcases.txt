@@ -1,0 +1,144 @@
+hwextra-testcases.txt
+
+test0: General Functionality
+	Input: 	ptr1 = (int *) malloc(sizeof(int));
+	        ptr2 = (int *) malloc(sizeof(int));
+	        ptr3 = (int *) malloc(sizeof(int));
+		*ptr1 = 1;
+	        *ptr2 = 250;
+	        *ptr3 = 125;
+		(print out each value)
+		free(ptr1);
+	       	free(ptr2);
+	       	free(ptr3);
+
+	Output: Allocating 4 bytes at address %p
+		Allocating 4 bytes at address %p
+		Allocating 4 bytes at address %p
+		Value at ptr1: 1
+	        Value at ptr2: 250
+	        Value at ptr3: 125
+		Freed space at address %p
+		Freed space at address %p
+		Freed space at address %p
+
+test1: Merge and Split of MemEntry structs (Fragmentation Handling)
+	Input: 	void * ptr1 = malloc(500);
+		void * ptr2 = malloc(1000);
+		void * ptr3 = malloc(2000);
+		PrintList();
+		free(ptr1);
+		PrintList();
+		free(ptr2);
+		PrintList();
+		free(ptr3);
+		PrintList();
+
+	Output: Allocating 500 bytes at address %p
+		Allocating 1000 bytes at address %p
+		Allocating 2000 bytes at address %p
+		(Print out MemEntry list after each allocation)
+		Freed space at address %p
+		(Print out MemEntry list after first free)
+		Freed space at address %p
+		(Print out MemEntry list after second free)
+		Freed space at address %p
+		(Print out MemEntry list after third free)
+
+test2: Saturation handling using sbrk (NOTE: attempted as extra credit)
+	Input: 	void * ptr1 = malloc(2000);
+		void * ptr2 = malloc(2000);
+		void * ptr3 = malloc(2000);
+		void * ptr4 = malloc(2000);
+		void * ptr5 = malloc(2000);
+		PrintList();
+		free(ptr1);
+		free(ptr2);
+		free(ptr3);
+		free(ptr4);
+		free(ptr5);
+		PrintList();
+
+	Output:	Allocating 2000 bytes of data at address %p
+		Allocating 2000 bytes of data at address %p
+		Warning: File:%s Line:%u in function 'mymalloc':
+			No available space left to allocate. Size requested was larger than available space.
+			Increasing data segment using SBRK.
+		Allocating 2000 bytes of data at address %p
+		Allocating 2000 bytes of data at address %p
+		Warning: File:%s Line:%u in function 'mymalloc':
+			No available space left to allocate. Size requested was larger than available space.
+			Increasing data segment using SBRK.
+		Allocating 2000 bytes of data at address %p
+
+		(Print out list showing MemEntry structs)
+
+		Freed space at address %p
+		Freed space at address %p
+		Freed space at address %p
+		Freed space at address %p
+		Freed space at address %p
+
+		(Print out list showing MemEntry structs)
+
+test3: Test error when freeing a pointer that was never allocated
+	Input: 	int x;
+		free(&x);
+	
+	Output: Error: File:%s Line:%u in function 'myfree':
+			Cannot free invalid pointer. Only pass pointers allocated by mymalloc.
+
+test4: Test freeing pointers not returned by mymalloc
+	Input:	char * p = (char *) malloc(200);
+		free(p + 10);
+
+	Output:	Allocating 200 bytes at address %p 
+		Error: File:%s Line:%u in function 'myfree':
+			Cannot free invalid pointer. Only pass pointers allocated by mymalloc.
+
+test5: Test redundant freeing of same pointer:
+	Input: 	void * p = malloc(100);
+		free(p);
+		free(p);
+
+	Output: Allocating 100 bytes at address %p
+		Error: File:%s Line:%u in function 'myfree':
+			Pointer was already freed. Function 'myfree' cannot free a deallocated pointer.
+
+test6: Allocating and freeing same pointer multiple times
+	Input: 	void * p;
+		p = malloc(1000);
+		free(p);
+		p = malloc(1000);
+		free(p);
+
+	Output:	Allocating 1000 bytes at address %p
+		Freed space at address %p
+		Allocating 1000 bytes at address %p
+		Freed space at address %p
+
+test7: Test using mycalloc (NOTE: attempted as extra credit)
+	Input: 	char * ptr = calloc(10);
+		(Prints out each value in allocated 10 bytes)
+
+	Output:	Value at ptr[0] (address %p): 0
+		Value at ptr[1] (address %p): 0
+		Value at ptr[2] (address %p): 0
+		Value at ptr[3] (address %p): 0
+		Value at ptr[4] (address %p): 0
+		Value at ptr[5] (address %p): 0
+		Value at ptr[6] (address %p): 0
+		Value at ptr[7] (address %p): 0
+		Value at ptr[8] (address %p): 0
+		Value at ptr[9] (address %p): 0
+
+test8: Invalid sizes passed to malloc (in our program invalid sizes are less than 1 or greater than 4960: this is CAPACITY - sizeof(MemEntry))
+	Input:	void * p;
+		p = malloc(0);
+		p = malloc(10000);
+
+	Output: Error: File:%s Line:%u in function 'mymalloc':
+			Invalid size given to mymalloc. Size must be greater than 0 and less than max capacity. Returned NULL.
+		Error: File:%s Line:%u in function 'mymalloc':
+			Invalid size given to mymalloc. Size must be greater than 0 and less than max capacity. Returned NULL.
+

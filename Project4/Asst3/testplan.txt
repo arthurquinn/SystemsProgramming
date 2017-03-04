@@ -1,0 +1,104 @@
+Trial 0: Tests inputting a file rather than a directory
+
+	Input: ./indexer "out" "TEST_FILE"
+	Output: Successfully wrote index to file: out
+
+	Index will look like:
+		{"list":[
+			{"aword":[
+				{"TEST_FILE":1}
+			]},
+			{"bword":[
+				{"TEST_FILE":1}
+			]},
+			{"cword":[
+				{"TEST_FILE":1}
+			]},
+			{"dword":[
+				{"TEST_FILE":1}
+			]},
+			{"eword":[
+				{"TEST_FILE":1}
+			]},
+			{"fword":[
+				{"TEST_FILE":1}
+			]}
+		]}
+
+Trial 1: Generic test for indexing directory
+
+	Input: ./indexer "out" "TEST_DIRECTORY1"
+	Output: Successfully wrote index to file: out
+
+	Index will look like:
+		{"list":[
+			{"barked":[
+				{"kfile":1}
+			]},
+			{"dog":[
+				{"afile":1},
+				{"kfile":1}
+			]},
+			{"down":[
+				{"afile":1}
+			]},
+			{"fox":[
+				{"kfile":7},
+				{"afile":5},
+				{"jfile":1}
+			]},
+			{"in":[
+				{"bfile":3}
+			]},
+			{"on":[
+				{"jfile":1}
+			]},
+			{"projects":[
+				{"jfile":1}
+			]},
+			{"ran":[
+				{"afile":1}
+			]},
+			{"the":[
+				{"afile":1},
+				{"kfile":1}
+			]},
+			{"words":[
+				{"bfile":4},
+				{"afile":3},
+				{"jfile":3},
+				{"kfile":1}
+			]},
+			{"working":[
+				{"jfile":1}
+			]},
+			{"written":[
+				{"afile":1}
+			]}
+		]}
+
+Trial 2: Tests when given an invalid file name
+
+	Input: ./indexer "" "TEST_DIRECTORY1"
+	Output: No such file or directory
+		Could not open or create output file. Enter a valid file name.
+		Error writing index to file.
+
+Trial 3: Tests when given an invalid directory
+
+	Input: ./indexer "out" "NOTAREALDIR"
+	Output: No such file or directory
+		Directory not found. Failed to search directory.
+		Error creating index.
+
+Trial 4: Tests when writing to a file that already exists
+
+	Input: ./indexer "TEST_FILEALREADYEXISTS" "TEST_DIRECTORY1"
+	Output: File "TEST_FILEALREADYEXISTS" already exists. Overwrite? y/n
+
+	Input: y
+	Output: Overwriting file: TEST_FILEALREADYEXISTS
+		Successfully wrote index to file: TEST_FILEALREADYEXISTS
+
+	Index will look like: Same as trial 1.
+

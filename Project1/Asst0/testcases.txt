@@ -1,0 +1,197 @@
+Test Cases for tokenier.c
+
+Simple Test of tokenizing basic words
+Input: ./tokenizer "simple word tokens"
+Expected Output:
+1: Word: simple
+2: Word: word
+3: Word: tokens
+End of token stream reached
+Exiting...
+
+Simple test of tokenizing basic decimals
+Input: ./tokenizer "123 456 789"
+Expected Output:
+1: Decimal: 123
+2: Decimal: 456
+3: Decimal: 789
+End of token stream reached
+Exiting...
+
+Test of octal termination/leading 0's/singular 0
+Input: ./tokenizer "0010798 000009 0"
+Expected Output:
+1: Octal: 00107
+2: Decimal: 98
+3: Octal: 00000
+4: Decimal: 9
+5: Decimal: 0
+End of token stream reached
+Exiting...
+
+Test of floats/extra decimal-points in floats/extra 'e' in floats/incomplete floats/floats with only one zero in one's and higher place
+Input: ./tokenizer "12.34e56 12.34e-56 12.34.45 12.34e56e67 12. 0.12"
+Expected Output:
+1: Float: 12.34e56
+2: Float: 12.34e-56
+3: Float: 12.34
+4: Dot: .
+5: Decimal: 45
+6: Float: 12.34e56
+7: Word: e67
+8: Decimal: 12
+9: Dot: .
+10: Float: 0.12
+End of token stream reached
+Exiting...
+
+Test of hexadecimal tokens/bad hex tokens/terminating conditions for hex tokens
+Input: ./tokenizer "0x12fA 0X 0x 0X12fg 0x0x 10x1fa"
+Expected Output:
+1: Hexadecimal: 0x12fA
+2: Bad Token: 0X
+3: Bad Token: 0x
+4: Hexadecimal: 0X12f
+5: Word: g
+6: Hexadecimal: 0x0
+7: Word: x
+8: Decimal 10
+9: Word: x1fa
+End of token stream reached
+Exiting...
+
+Test of C operators/multiple operators
+Input: ./tokenizer "->>>=<>+=|=:+++[];"
+Expected Output:
+1: Structure Pointer: ->
+2: Shift Right Equals: >>=
+3: Less Than: <
+4: Greater Than: >
+5: Plus Equals: +=
+6: Bitwise Or Equals: |=
+7: Condition: :
+8: Plus Plus: ++
+9: Add: +
+10: Left Brace: [
+11: Right Brace: ]
+12: Bad Token: ;
+End of token stream reached
+Exiting...
+
+Test of single line comment (note that to add \n in command line shift-enter is used)
+Input: ./tokenizer "//this is a comment\n
+this is not a comment"
+Expected Output:
+1: Single Line Comment: //this is a comment
+2: Word: this
+3: Word: is
+4: Word: not
+5: Word: a
+6: Word: comment
+End of token stream reached
+Exiting...
+
+Test of block comment
+Input: ./tokenizer "/*this is\n
+*a\n
+*block comment */ this is not"
+Expected Output:
+1: Block Comment: /*this is
+*a
+*block comment */
+2: Word: this
+3: Word: is
+4: Word: not
+End of token stream reached
+Exiting...
+
+Non-terminated block commments
+Input: ./tokenizer "/*not terminated"
+Expected Output:
+1: Block Comment: /*not terminated
+End of token stream reached
+Exiting...
+
+Test of single quoted string and non-terminated single quoted string
+Input: ./tokenizer "'words in string' abcd 'string that is not closed"
+Expected Output:
+1: Single Quoted String: 'words in string'
+2: Word: abcd
+3: Bad Token: 'string that is not closed
+End of token stream reached
+Exiting...
+
+Test of double quoted string and non-terminated double quoted string (note that escape characters are used to enter the double quotes; if escape
+characters are not used the double quotes will be interpreted as the end of the argument)
+Input: ./tokenizer "\"words in string\" abcd \"string that is not closed" 
+Expected Output:
+1: Double Quoted String: "words in string"
+2: Word: abcd
+3: Bad Token: "string that is not closed
+End of token stream reached
+Exiting...
+
+Test of keywords
+Input: ./tokenizer "some keywords if else break 123return 123.struct goto1"
+Expected Output:
+1: Word: some
+2: Word: keywords
+3: Keyword: if
+4: Keyword: else
+5: Keyword: break
+6: Decimal: 123
+7: Keyword: return
+8: Decimal: 123
+9: Dot: .
+10: Keyword: struct
+11: Word: goto1
+End of token stream reached
+Exiting...
+
+Test of functionality given heavily mixed data
+Input: ./tokenizer "12.,ty6/=+}r555t4.01t0.0x123dfg.0Xt67:001&0"
+Expected Output:
+1: Decimal: 12
+2: Dot: .
+3: Comma: ,
+4: Word: ty6
+5: Divide Equals: /=
+6: Add: +
+7: Bad Token: }
+8: Word: r55t4
+9: Dot: .
+10: Octal: 01
+11: Word: t0
+12: Dot: . 
+13: Hexadecimal: 0x123df
+14: Word: g
+15: Dot: .
+16: Bad Token: 0X
+17: Word: t67
+18: Condition: :
+19: Octal: 001
+20: Address: &
+21: Decimal: 0
+End of token stream reached
+Exiting...
+
+Test with no arguments passed
+Input: ./tokenizer
+Expected Output:
+Invalid number of arguments given to main
+Requires 1 string argument
+Exiting...
+
+Test with more than one arguments passed
+Input: ./tokenizer "word" "word"
+Expected Output: 
+Invalid number of arguments given to main
+Requires 1 string argument
+Exiting...
+
+Test with a single, empty string argument
+Input: ./tokenizer ""
+Expected Output:
+End of token stream reached
+Exiting...
+
